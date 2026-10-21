@@ -18,6 +18,54 @@ function toast(msg){let t=document.getElementById('toast');if(!t){t=document.cre
         ['recommendations.html', 'Recommend', 'images/convenience.png']
     ];
 
+    const headerIcons = {
+        search: 'images/search.png',
+        filter: 'images/filter.png',
+        favourites: 'images/heart.png',
+        cart: 'images/cart.png'
+    };
+
+    const cur = location.pathname.split('/').pop() || 'index.html';
+
+    document.body.insertAdjacentHTML(
+        'afterbegin',
+        `
+        <header class="app-header">
+            <button class="header-btn back-btn"
+                    onclick="history.back()"
+                    aria-label="Go back">
+                <img src="${headerIcons.back}" alt="">
+            </button>
+
+            <div class="header-actions">
+                <button class="icon-btn"
+                        aria-label="Search"
+                        onclick="document.getElementById('q')?.focus()">
+                    <img src="${headerIcons.search}" alt="">
+                </button>
+
+                <button class="icon-btn"
+                        aria-label="Filter"
+                        onclick="document.querySelector('.chips')?.scrollIntoView({behavior:'smooth'})">
+                    <img src="${headerIcons.filter}" alt="">
+                </button>
+
+                <a class="round-icon-btn"
+                   href="my-plants.html"
+                   aria-label="Favourites">
+                    <img src="${headerIcons.favourites}" alt="">
+                </a>
+
+                <a class="round-icon-btn"
+                   href="my-plants.html"
+                   aria-label="Cart">
+                    <img src="${headerIcons.cart}" alt="">
+                </a>
+            </div>
+        </header>
+        `
+    );
+
     const cur = location.pathname.split('/').pop() || 'index.html';
 
     document.body.insertAdjacentHTML(
