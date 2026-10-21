@@ -9,6 +9,7 @@ function toast(msg){let t=document.getElementById('toast');if(!t){t=document.cre
 
 
 
+
 (function () {
     const pages = [
         ['index.html', 'Home', 'images/home.png'],
@@ -66,20 +67,16 @@ function toast(msg){let t=document.getElementById('toast');if(!t){t=document.cre
         `
     );
 
-    const cur = location.pathname.split('/').pop() || 'index.html';
-
     document.body.insertAdjacentHTML(
         'beforeend',
         `
         <nav class="bottom-nav" aria-label="Main navigation">
             ${pages.map(p => `
-                <a
-                    href="${p[0]}"
-                    class="${p[0] === cur ||
-                    (cur === 'plant-info.html' && p[0] === 'index.html')
-                        ? 'active'
-                        : ''}"
-                >
+                <a href="${p[0]}"
+                   class="${p[0] === cur ||
+                   (cur === 'plant-info.html' && p[0] === 'index.html')
+                       ? 'active'
+                       : ''}">
                     <img src="${p[2]}" alt="" class="nav-icon">
                     <span>${p[1]}</span>
                 </a>
