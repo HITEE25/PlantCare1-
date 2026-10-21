@@ -20,7 +20,7 @@ function toast(msg){let t=document.getElementById('toast');if(!t){t=document.cre
     ];
 
     const headerIcons = {
-        back: 'images/back.png',
+        back: 'images/left.png',
         search: 'images/search.png',
         filter: 'images/filter.png',
         favourites: 'images/heart.png',
