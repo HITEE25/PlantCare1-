@@ -32,11 +32,6 @@ function toast(msg){let t=document.getElementById('toast');if(!t){t=document.cre
         'afterbegin',
         `
         <header class="app-header">
-            <button class="header-btn back-btn"
-                    onclick="history.back()"
-                    aria-label="Go back">
-                <img src="${headerIcons.back}" alt="">
-            </button>
 
             <div class="header-actions">
                 <button class="icon-btn"
