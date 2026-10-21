@@ -13,9 +13,9 @@ function toast(msg){let t=document.getElementById('toast');if(!t){t=document.cre
     const pages = [
         ['index.html', 'Home', 'images/home.png'],
         ['identify.html', 'Identify', 'images/search.png'],
-        ['my-plants.html', 'My Plants', 'images/my-plants.png'],
+        ['my-plants.html', 'My Plants', 'images/snake-plant.png'],
         ['care-reminders.html', 'Care', 'images/leaves.png'],
-        ['recommendations.html', 'Recommend', 'images/recommend.png']
+        ['recommendations.html', 'Recommend', 'images/advice.png']
     ];
 
     const cur = location.pathname.split('/').pop() || 'index.html';
