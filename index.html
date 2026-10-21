@@ -1,9 +1,75 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Home · PlantCare</title><link rel="stylesheet" href="css/style.css"></head><body data-page="home"><main>
-<section class="hero"><div><h1>Bring Greenery to Life</h1><p style="color:var(--muted)">Curated plants for every space and every plant parent.</p><a class="btn" href="#results">Browse Plants</a></div><div class="art" aria-hidden="true">🪴</div></section>
-<a class="btn wide" href="identify.html">📷 Identify Plant</a>
-<div class="chips" role="group" aria-label="Quick filters"><button class="chip" data-filter="all"><span>🌿</span>Indoor</button><button class="chip" data-filter="fav"><span>♡</span>Favourites</button><button class="chip" data-filter="low"><span>☀</span>Low Light</button><button class="chip" data-filter="pet"><span>🐾</span>Pet Friendly</button></div>
-<label for="q">Search plants by name or category</label><input id="q" type="search" placeholder="e.g. Fern, Succulent">
-<div class="pill-row" style="margin:14px 0"><a class="btn soft" href="recommendations.html">Get Plant Recommendation</a></div>
-<div class="panel" id="summary"></div>
-<h2 id="results">Plants</h2><div class="grid" id="grid"></div>
-</main><script src="js/plants-data.js"></script><script src="js/app.js"></script><script src="js/pages.js"></script></body></html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Home | PlantCare</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body data-page="home">
+    <main>
+   
+        <section class="hero">
+            <div>
+                <h1>Bring Greenery to Life</h1>
+
+                <p style="color: var(--muted);">
+                    Curated plants for every space and every plant parent.
+                </p>
+
+                <a class="btn" href="#results">Browse Plants</a>
+            </div>
+
+            <div class="art" aria-hidden="true">🪴</div>
+        </section>
+
+        <a class="btn wide" href="identify.html">
+            📷 Identify Plant
+        </a>
+
+        <div class="chips" role="group" aria-label="Quick filters">
+            <button class="chip" data-filter="all">
+                <span>🌿</span> Indoor
+            </button>
+
+            <button class="chip" data-filter="fav">
+                <span>♡</span> Favourites
+            </button>
+
+            <button class="chip" data-filter="low">
+                <span>☀</span> Low Light
+            </button>
+
+            <button class="chip" data-filter="pet">
+                <span>🐾</span> Pet Friendly
+            </button>
+        </div>
+
+        <label for="q">Search plants by name or category</label>
+        <input
+            type="search"
+            id="q"
+            placeholder="e.g. Fern, Succulent"
+        >
+
+        <div class="pill-row" style="margin: 14px 0;">
+            <a class="btn soft" href="recommendations.html">
+                Get Plant Recommendation
+            </a>
+        </div>
+
+        <div class="panel" id="summary"></div>
+
+        <h2 id="results">Plants</h2>
+        <div class="grid" id="grid"></div>
+    </main>
+  
+    <script src="js/plants-data.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/pages.js"></script>
+</body>
+</html>
