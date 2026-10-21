@@ -11,7 +11,7 @@ function toast(msg){let t=document.getElementById('toast');if(!t){t=document.cre
 (function () {
     const pages = [
         ['index.html', 'Home', 'images/home.png'],
-        ['identify.html', 'Identify', 'images/identify.png'],
+        ['identify.html', 'Identify', 'images/search.png'],
         ['my-plants.html', 'My Plants'],
         ['care-reminders.html', 'Care', 'images/leaves.png'],
         ['recommendations.html', 'Recommend']
