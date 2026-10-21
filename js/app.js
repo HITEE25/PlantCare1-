@@ -8,6 +8,15 @@ const fmt=d=>new Date(d).toLocaleDateString(undefined,{month:'short',day:'numeri
 function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.setAttribute('role','status');document.body.append(t)}t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
 
 
+function goBack() {
+    const previousPage = document.referrer;
+    if (previousPage && new URL(previousPage).origin === location.origin) {
+        history.back();
+    } else {
+        location.href = 'index.html';
+    }
+}
+
 
 
 (function () {
@@ -36,10 +45,9 @@ function toast(msg){let t=document.getElementById('toast');if(!t){t=document.cre
 
             <div class="header-actions">
                  <button class="header-btn back-btn"
-                    onclick="history.back()"
-                    aria-label="Go back">
-                    <img src="${headerIcons.back}" alt="">
-                </button>
+                    onclick="goBack()"
+                    aria-label="Go back"
+                type="button">
                 <button class="icon-btn"
                         aria-label="Search"
                         onclick="document.getElementById('q')?.focus()">
