@@ -8,47 +8,42 @@ const fmt=d=>new Date(d).toLocaleDateString(undefined,{month:'short',day:'numeri
 function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.setAttribute('role','status');document.body.append(t)}t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
 
 
+
 (function () {
     const pages = [
         ['index.html', 'Home', 'images/home.png'],
         ['identify.html', 'Identify', 'images/search.png'],
-        ['my-plants.html', 'My Plants'],
+        ['my-plants.html', 'My Plants', 'images/my-plants.png'],
         ['care-reminders.html', 'Care', 'images/leaves.png'],
-        ['recommendations.html', 'Recommend']
+        ['recommendations.html', 'Recommend', 'images/recommend.png']
     ];
 
     const cur = location.pathname.split('/').pop() || 'index.html';
 
-    // Header and navigation
     document.body.insertAdjacentHTML(
-        'afterbegin',
+        'beforeend',
         `
-        <footer>
-            <a class="logo" href="index.html">
-                <img src="images/logo.png" alt="" class="logo-icon">
-                PlantCare
-            </a>
+        <nav class="bottom-nav" aria-label="Main navigation">
+            ${pages.map(p => `
+                <a
+                    href="${p[0]}"
+                    class="${p[0] === cur ||
+                    (cur === 'plant-info.html' && p[0] === 'index.html')
+                        ? 'active'
+                        : ''}"
+                >
+                    <img src="${p[2]}" alt="" class="nav-icon">
+                    <span>${p[1]}</span>
+                </a>
+            `).join('')}
+        </nav>
 
-            <nav aria-label="Main">
-                ${pages.map(p => `
-                    <a
-                        href="${p[0]}"
-                        class="${
-                            p[0] === cur ||
-                            (cur === 'plant-info.html' && p[0] === 'index.html')
-                                ? 'active'
-                                : ''
-                        }"
-                    >
-                        <img src="${p[2]}" alt="" class="nav-icon">
-                        <span>${p[1]}</span>
-                    </a>
-                `).join('')}
-            </nav>
+        <footer class="site-footer">
+            PlantCare &copy; ${new Date().getFullYear()}
+            · Data stored only in your browser
         </footer>
         `
     );
-  
 })();
 
 function savePlant(id,nickname,room){
