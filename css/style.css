@@ -506,4 +506,85 @@ body {
 }
 
 
+.app-header {
+    width: 100%;
+    height: 84px;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    background: #f5f2ea;
+    overflow: hidden;
+}
+
+.app-header button,
+.app-header a {
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.app-header img {
+    display: block;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    width: 28px !important;
+    height: 28px !important;
+    object-fit: contain;
+}
+
+.app-header .back-btn,
+.app-header .round-icon-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-header .icon-btn {
+    width: 32px;
+    height: 42px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 480px) {
+    .app-header {
+        height: 72px;
+        padding: 10px 12px;
+    }
+
+    .header-actions {
+        gap: 10px;
+    }
+
+    .app-header .back-btn,
+    .app-header .round-icon-btn {
+        width: 44px;
+        height: 44px;
+    }
+
+    .app-header img {
+        width: 24px !important;
+        height: 24px !important;
+        max-width: 24px !important;
+        max-height: 24px !important;
+    }
+}
+
+
+
 
