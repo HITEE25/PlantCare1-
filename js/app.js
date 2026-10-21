@@ -20,6 +20,7 @@ function toast(msg){let t=document.getElementById('toast');if(!t){t=document.cre
     ];
 
     const headerIcons = {
+        back: 'images/back.png',
         search: 'images/search.png',
         filter: 'images/filter.png',
         favourites: 'images/heart.png',
@@ -34,6 +35,11 @@ function toast(msg){let t=document.getElementById('toast');if(!t){t=document.cre
         <header class="app-header">
 
             <div class="header-actions">
+                 <button class="header-btn back-btn"
+                    onclick="history.back()"
+                    aria-label="Go back">
+                    <img src="${headerIcons.back}" alt="">
+                </button>
                 <button class="icon-btn"
                         aria-label="Search"
                         onclick="document.getElementById('q')?.focus()">
