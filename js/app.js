@@ -1,4 +1,4 @@
-// Shared helpers: storage, navigation, toast, plant cards
+
 const Store={get(k,d){try{const v=JSON.parse(localStorage.getItem('pc_'+k));return v===null?d:v}catch{return d}},set(k,v){localStorage.setItem('pc_'+k,JSON.stringify(v))}};
 const today=()=>new Date().toISOString().slice(0,10);
 const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
@@ -7,15 +7,50 @@ const fmt=d=>new Date(d).toLocaleDateString(undefined,{month:'short',day:'numeri
 
 function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.setAttribute('role','status');document.body.append(t)}t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
 
-// Build the header + footer on every page; highlight the current page
-(function(){
-  const pages=[['index.html','Home'],['identify.html','Identify'],['my-plants.html','My Plants'],['care-reminders.html','Care'],['recommendations.html','Recommend']];
-  const cur=location.pathname.split('/').pop()||'index.html';
-  document.body.insertAdjacentHTML('afterbegin',`<header><a class="logo" href="index.html">🌿 PlantCare</a><nav aria-label="Main">${pages.map(p=>`<a href="${p[0]}" class="${p[0]===cur||(cur==='plant-info.html'&&p[0]==='index.html')?'active':''}">${p[1]}</a>`).join('')}</nav></header>`);
-  document.body.insertAdjacentHTML('beforeend','<footer>PlantCare · data stored only in your browser</footer>');
+
+(function () {
+    const pages = [
+        ['index.html', 'Home', 'images/home.png'],
+        ['identify.html', 'Identify', 'images/identify.png'],
+        ['my-plants.html', 'My Plants', 'images/my-plants.png'],
+        ['care-reminders.html', 'Care', 'images/care.png'],
+        ['recommendations.html', 'Recommend', 'images/recommend.png']
+    ];
+
+    const cur = location.pathname.split('/').pop() || 'index.html';
+
+    // Header and navigation
+    document.body.insertAdjacentHTML(
+        'afterbegin',
+        `
+        <footer>
+            <a class="logo" href="index.html">
+                <img src="images/logo.png" alt="" class="logo-icon">
+                PlantCare
+            </a>
+
+            <nav aria-label="Main">
+                ${pages.map(p => `
+                    <a
+                        href="${p[0]}"
+                        class="${
+                            p[0] === cur ||
+                            (cur === 'plant-info.html' && p[0] === 'index.html')
+                                ? 'active'
+                                : ''
+                        }"
+                    >
+                        <img src="${p[2]}" alt="" class="nav-icon">
+                        <span>${p[1]}</span>
+                    </a>
+                `).join('')}
+            </nav>
+        </footer>
+        `
+    );
+  
 })();
 
-// Save a database plant to My Plants and create a default watering reminder
 function savePlant(id,nickname,room){
   const p=plantById(id);const list=Store.get('plants',[]);
   const uid='u'+Date.now();
