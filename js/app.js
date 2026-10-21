@@ -12,9 +12,9 @@ function toast(msg){let t=document.getElementById('toast');if(!t){t=document.cre
     const pages = [
         ['index.html', 'Home', 'images/home.png'],
         ['identify.html', 'Identify', 'images/identify.png'],
-        ['my-plants.html', 'My Plants', 'images/my-plants.png'],
-        ['care-reminders.html', 'Care', 'images/care.png'],
-        ['recommendations.html', 'Recommend', 'images/recommend.png']
+        ['my-plants.html', 'My Plants'],
+        ['care-reminders.html', 'Care', 'images/leaves.png'],
+        ['recommendations.html', 'Recommend']
     ];
 
     const cur = location.pathname.split('/').pop() || 'index.html';
