@@ -15,7 +15,7 @@ function toast(msg){let t=document.getElementById('toast');if(!t){t=document.cre
         ['identify.html', 'Identify', 'images/search.png'],
         ['my-plants.html', 'My Plants', 'images/snake-plant.png'],
         ['care-reminders.html', 'Care', 'images/leaves.png'],
-        ['recommendations.html', 'Recommend', 'images/advice.png']
+        ['recommendations.html', 'Recommend', 'images/convenience.png']
     ];
 
     const cur = location.pathname.split('/').pop() || 'index.html';
