@@ -657,5 +657,173 @@ select {
     object-fit: contain;
 }
 
+body[data-page="signin"] {
+    background: #f5f3eb;
+    color: #263b2b;
+}
+
+.signin-main {
+    width: 100%;
+    max-width: 520px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 28px 24px 50px;
+}
+
+.signin-card {
+    width: 100%;
+}
+
+.brand {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 12px auto 24px;
+}
+
+.brand-logo {
+    display: block;
+    width: 100%;
+    max-width: 370px;
+    height: auto;
+    object-fit: contain;
+}
+
+.signin-card h1 {
+    margin: 12px 0 28px;
+    text-align: center;
+    color: #315e08;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.role-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 30px 0 48px;
+}
+
+.role-btn {
+    flex: 1;
+    min-width: 0;
+    min-height: 58px;
+    padding: 12px 8px;
+    border: 1.5px solid #385740;
+    border-radius: 26px;
+    background: #385740;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: default;
+}
+
+.role-btn.active {
+    background: #d8dfce;
+    color: #385740;
+}
+
+#authForm {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#authForm label {
+    margin-top: 8px;
+    color: #263b2b;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+#authForm input {
+    width: 100%;
+    min-height: 56px;
+    padding: 14px 18px;
+    border: none;
+    border-radius: 28px;
+    outline: none;
+    background: #e2ebd2;
+    color: #263b2b;
+    font-size: 1rem;
+}
+
+#authForm input:focus {
+    box-shadow: 0 0 0 2px #385740;
+}
+
+#authForm input::placeholder {
+    color: #74816e;
+}
+
+.forgot-password {
+    margin-top: 0;
+    text-align: right;
+}
+
+.forgot-password a {
+    color: #263b2b;
+    font-size: 0.95rem;
+    text-decoration: none;
+}
+
+.login-btn {
+    width: 100%;
+    min-height: 68px;
+    margin-top: 28px;
+    border: none;
+    border-radius: 36px;
+    background: #385740;
+    color: #ffffff;
+    font-size: 1.3rem;
+}
+
+.switch {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.link {
+    padding: 4px;
+    border: none;
+    background: transparent;
+    color: #315e08;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.profile-icon {
+    margin: 50px auto 20px;
+    text-align: center;
+    font-size: 4rem;
+}
+
+.signin-card[hidden],
+#nameWrap[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 380px) {
+    .signin-main {
+        padding-right: 18px;
+        padding-left: 18px;
+    }
+
+    .role-buttons {
+        gap: 8px;
+    }
+
+    .role-btn {
+        font-size: 0.9rem;
+    }
+
+    .brand-logo {
+        max-width: 300px;
+    }
+}
+
+
 
 
