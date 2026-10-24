@@ -634,5 +634,13 @@ select {
         padding: 16px 8px;
     }
 }
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px; 
+}
+.app-header .header-actions > .icon-btn:first-child {
+    margin-left: 18px;
+}
 
 
