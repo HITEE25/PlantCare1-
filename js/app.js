@@ -22,6 +22,7 @@ function goBack() {
 
 (function () {
     if (document.body.dataset.page === 'signin') return;
+    const tabs=['signin.html','👤','Profile'];
     const pages = [
         ['index.html', 'Home', 'images/home.png'],
         ['identify.html', 'Identify', 'images/search.png'],
