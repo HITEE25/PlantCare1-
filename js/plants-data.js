@@ -48,7 +48,7 @@ const RAW = [
         'Easy',
         true,
         's',
-        '🌱',
+        '../spider-plant.jpg',
         'Arching striped leaves and baby plantlets. Safe for pets.',
         'Use filtered water to avoid brown tips.',
         'Brown tips|Fluoride in tap water|Use filtered or rain water'
@@ -66,7 +66,7 @@ const RAW = [
         'Moderate',
         false,
         'm',
-        '🤍',
+        '../peace-lily.jpg',
         'Glossy leaves with white blooms; droops when thirsty.',
         'Mist leaves and keep soil evenly moist.',
         'Drooping leaves|Thirst|Water thoroughly, it recovers fast'
@@ -84,7 +84,7 @@ const RAW = [
         'Moderate',
         true,
         'l',
-        '🌴',
+        '../areca-palm.jpg',
         'Feathery fronds that give a tropical feel. Pet safe.',
         'Give bright indirect light, avoid hot afternoon sun.',
         'Brown tips|Dry air|Mist and avoid direct sun'
@@ -102,7 +102,7 @@ const RAW = [
         'Easy',
         false,
         's',
-        '🪴',
+        '../aloe-vera.jpg',
         'Medicinal succulent that loves sun and neglect.',
         'Water deeply but rarely.',
         'Soft brown leaves|Root rot|Reduce watering, improve drainage'
@@ -120,7 +120,7 @@ const RAW = [
         'Easy',
         false,
         'm',
-        '🌿',
+        '../zz-plant.jpg',
         'Nearly indestructible with glossy leaves; thrives on neglect.',
         'Rotate it occasionally for even growth.',
         'Yellow stems|Overwatering|Skip watering for 2–3 weeks'
@@ -138,7 +138,7 @@ const RAW = [
         'Moderate',
         false,
         'l',
-        '🌿',
+        '../monstera.jpg',
         'Iconic split leaves; climbs with a moss pole.',
         'Wipe leaves monthly for better light capture.',
         'No splits in leaves|Low light|Move to brighter indirect light'
@@ -156,7 +156,7 @@ const RAW = [
         'Easy',
         false,
         'l',
-        '🌳',
+        '../rubber-plant.jpg',
         'Bold glossy leaves; grows into a statement tree.',
         'Avoid moving it often; it dislikes change.',
         'Dropping leaves|Sudden change|Keep conditions steady'
@@ -174,7 +174,7 @@ const RAW = [
         'Easy',
         false,
         's',
-        '🍃',
+        '../pothos.jpg',
         'Trailing, forgiving vine for shelves and hanging pots.',
         'Cut below a node to propagate in water.',
         'Pale leaves|Too little light|Move closer to a window'
@@ -192,7 +192,7 @@ const RAW = [
         'Easy',
         false,
         's',
-        '💚',
+        '../jade-plant.jpg',
         'Thick leaves store water; a long-lived lucky plant.',
         'Needs 4+ hours of bright light.',
         'Wrinkled leaves|Underwatering|Water deeply then let dry'
@@ -210,7 +210,7 @@ const RAW = [
         'Hard',
         true,
         'm',
-        '🌿',
+        '../boston-fern.jpg',
         'Lush fronds that love humidity. Pet safe.',
         'Keep soil moist and place away from heaters.',
         'Crispy fronds|Dry air|Mist daily or use a pebble tray'
@@ -228,7 +228,7 @@ const RAW = [
         'Easy',
         false,
         's',
-        '💚',
+        '../philodendron.jpg',
         'Heart-shaped leaves, adaptable to low light.',
         'Pinch tips to encourage fullness.',
         'Yellow leaves|Overwatering|Allow top 2 cm to dry'
@@ -246,7 +246,7 @@ const RAW = [
         'Easy',
         false,
         'l',
-        '🌴',
+        '../dracaena.jpg',
         'Spiky, sculptural plant tolerant of low light.',
         'Water sparingly in winter.',
         'Brown tips|Fluoride or dry air|Use filtered water'
@@ -264,7 +264,7 @@ const RAW = [
         'Hard',
         false,
         'l',
-        '🌳',
+        '../fiddle-leaf-fig.jpg',
         'Large violin-shaped leaves; fussy but dramatic.',
         'Needs bright indirect light and steady routine.',
         'Brown spots|Overwatering|Check drainage, water less'
