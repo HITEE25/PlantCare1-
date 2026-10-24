@@ -142,8 +142,7 @@ if (document.body.dataset.page === 'signin') {
                     name: user.name,
                     email: user.email
                 });
-
-                toast('Welcome back, ' + user.name + ' 🌿');
+                
             }
 
             setTimeout(() => {
