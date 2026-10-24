@@ -12,7 +12,7 @@ const RAW = [
         'Easy',
         false,
         'm',
-        '🌿',
+        '../1.jpeg',
         'Super hardy and air-purifying. Perfect for beginners and low light spaces.',
         'Let soil dry fully between waterings.',
         'Mushy base|Overwatering|Water less, repot in dry soil'
