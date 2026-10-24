@@ -22,13 +22,14 @@ function goBack() {
 
 (function () {
     if (document.body.dataset.page === 'signin') return;
-    const tabs=['signin.html','👤','Profile'];
+    const tabs=['signin.html','images/user.png','Profile'];
     const pages = [
         ['index.html', 'Home', 'images/home.png'],
         ['identify.html', 'Identify', 'images/search.png'],
         ['my-plants.html', 'My Plants', 'images/snake-plant.png'],
         ['care-reminders.html', 'Care', 'images/leaves.png'],
-        ['recommendations.html', 'Recommend', 'images/convenience.png']
+        ['recommendations.html', 'Recommend', 'images/convenience.png'],
+        ['signin.html', 'Profile', 'images/user.png']
     ];
 
     const headerIcons = {
