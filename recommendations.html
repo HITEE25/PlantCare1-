@@ -1,9 +1,60 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Recommendations · PlantCare</title><link rel="stylesheet" href="css/style.css"></head><body data-page="rec"><main>
-<h1>Find Your Plant</h1><form class="panel" id="form">
-<label for="light">Light in your room</label><select id="light"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="bright">Bright</option></select>
-<label for="care">Watering preference</label><select id="care"><option value="low">Low maintenance</option><option value="moderate" selected>Moderate</option><option value="high">Frequent care</option></select>
-<label for="exp">Experience</label><select id="exp"><option>Easy</option><option>Moderate</option><option>Hard</option></select>
-<label for="size">Available space</label><select id="size"><option value="s">Small (desk/shelf)</option><option value="m" selected>Medium</option><option value="l">Large (floor)</option></select>
-<label for="pets">Pets at home?</label><select id="pets"><option value="no">No</option><option value="yes">Yes – must be pet safe</option></select>
-<button class="btn wide">Recommend</button></form><div id="out"></div>
-</main><script src="js/plants-data.js"></script><script src="js/app.js"></script><script src="js/pages.js"></script></body></html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations · PlantCare</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="rec">
+    <main>
+        <h1>Find Your Plant</h1>
+
+        <form class="panel" id="form">
+            <label for="light">Light in your room</label>
+            <select id="light">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="bright">Bright</option>
+            </select>
+
+            <label for="care">Watering preference</label>
+            <select id="care">
+                <option value="low">Low maintenance</option>
+                <option value="moderate" selected>Moderate</option>
+                <option value="high">Frequent care</option>
+            </select>
+
+            <label for="exp">Experience</label>
+            <select id="exp">
+                <option>Easy</option>
+                <option>Moderate</option>
+                <option>Hard</option>
+            </select>
+
+            <label for="size">Available space</label>
+            <select id="size">
+                <option value="s">Small (desk/shelf)</option>
+                <option value="m" selected>Medium</option>
+                <option value="l">Large (floor)</option>
+            </select>
+
+            <label for="pets">Pets at home?</label>
+            <select id="pets">
+                <option value="no">No</option>
+                <option value="yes">Yes – must be pet safe</option>
+            </select>
+
+            <button class="btn wide">Recommend</button>
+        </form>
+
+        <div id="out"></div>
+    </main>
+
+    <script src="js/plants-data.js"></script>
+    <script src="js/auth.js"></script><script>Auth.require()</script>
+    <script src="js/app.js"></script>
+    <script src="js/pages.js"></script>
+</body>
+</html>
