@@ -30,7 +30,7 @@ const RAW = [
         'Easy',
         false,
         's',
-        '🍃',
+        '../money.webp',
         'A fast-growing trailing vine, loved in homes for good luck.',
         'Trim long vines to keep it bushy.',
         'Yellow leaves|Too much water|Let top soil dry before watering'
