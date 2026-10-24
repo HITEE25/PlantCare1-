@@ -825,5 +825,100 @@ body[data-page="signin"] {
 }
 
 
+/* Compact PlantCare+ login and registration layout */
+
+body[data-page="signin"] {
+    box-sizing: border-box;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+body[data-page="signin"] *,
+body[data-page="signin"] *::before,
+body[data-page="signin"] *::after {
+    box-sizing: border-box;
+}
+
+body[data-page="signin"] .signin-main {
+    width: 100%;
+    max-width: 460px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 12px 20px 24px;
+}
+
+body[data-page="signin"] .brand {
+    margin: 0 auto 8px;
+}
+
+body[data-page="signin"] .brand-logo {
+    display: block;
+    width: 100%;
+    max-width: 210px;
+    max-height: 220px;
+    height: auto;
+    object-fit: contain;
+}
+
+body[data-page="signin"] .signin-card h1 {
+    margin: 8px 0 20px;
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+    line-height: 1.15;
+}
+
+body[data-page="signin"] .role-buttons {
+    gap: 10px;
+    margin: 20px 0 28px;
+}
+
+body[data-page="signin"] .role-btn {
+    min-height: 48px;
+    padding: 10px 6px;
+    font-size: 0.95rem;
+}
+
+body[data-page="signin"] #authForm {
+    gap: 8px;
+}
+
+body[data-page="signin"] #authForm label {
+    margin-top: 6px;
+    font-size: 1rem;
+}
+
+body[data-page="signin"] #authForm input {
+    min-height: 48px;
+    padding: 12px 16px;
+    font-size: 1rem;
+}
+
+body[data-page="signin"] .login-btn {
+    min-height: 54px;
+    margin-top: 16px;
+    font-size: 1.15rem;
+}
+
+body[data-page="signin"] .switch {
+    margin-top: 18px;
+    padding-bottom: 8px;
+}
+
+@media (max-height: 750px) {
+    body[data-page="signin"] .brand-logo {
+        max-width: 150px;
+        max-height: 150px;
+    }
+
+    body[data-page="signin"] .signin-main {
+        padding-top: 8px;
+    }
+
+    body[data-page="signin"] .role-buttons {
+        margin-bottom: 18px;
+    }
+}
+
+
+
 
 
