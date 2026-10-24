@@ -1,19 +1,19 @@
-// Demo authentication using localStorage (NOT secure – replace with a real backend later)
+
 const Auth = {
-  // Hash passwords so they are not stored as plain text
+ 
   async hash(text) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
     return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
   },
-  user() { return Store.get('session', null); },          // current signed-in user or null
+  user() { return Store.get('session', null); },          
   signOut() { localStorage.removeItem('pc_session'); location.href = 'signin.html'; },
-  require() { if (!Auth.user()) location.href = 'signin.html'; }  // call on pages you want to protect
+  require() { if (!Auth.user()) location.href = 'signin.html'; }  
 };
 
-// ---- Everything below only runs on the sign-in page ----
+
 if (document.body.dataset.page === 'signin') {
   const $ = s => document.querySelector(s);
-  let mode = 'in'; // 'in' = sign in, 'up' = create account
+  let mode = 'in'; 
 
   function showView() {
     const u = Auth.user();
