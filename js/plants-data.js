@@ -284,7 +284,7 @@ const PLANTS = RAW.map(r => ({
     difficulty: r[9],
     petSafe: r[10],
     size: r[11],
-    emoji: r[12],
+    image: r[12],
     description: r[13],
     careTip: r[14],
 
