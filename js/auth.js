@@ -1,71 +1,163 @@
 
 const Auth = {
- 
-  async hash(text) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
-  },
-  user() { return Store.get('session', null); },          
-  signOut() { localStorage.removeItem('pc_session'); location.href = 'signin.html'; },
-  require() { if (!Auth.user()) location.href = 'signin.html'; }  
+    async hash(text) {
+        const buf = await crypto.subtle.digest(
+            'SHA-256',
+            new TextEncoder().encode(text)
+        );
+
+        return [...new Uint8Array(buf)]
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('');
+    },
+
+    user() {
+        return Store.get('session', null);
+    },
+
+    signOut() {
+        localStorage.removeItem('pc_session');
+        location.href = 'signin.html';
+    },
+
+    require() {
+        if (!Auth.user()) {
+            location.href = 'signin.html';
+        }
+    }
 };
 
 
 if (document.body.dataset.page === 'signin') {
-  const $ = s => document.querySelector(s);
-  let mode = 'in'; 
+    const $ = selector => document.querySelector(selector);
 
-  function showView() {
-    const u = Auth.user();
-    $('#formView').hidden = !!u;
-    $('#profileView').hidden = !u;
-    if (u) { $('#who').textContent = u.name; $('#whoEmail').textContent = u.email; }
-  }
+    let mode = 'in';
 
-  function setMode(m) {
-    mode = m;
-    const up = m === 'up';
-    $('#nameWrap').hidden = !up;
-    $('#title').textContent = up ? 'Create account' : 'Welcome back';
-    $('#sub').textContent = up ? 'Join PlantCare in a minute' : 'Sign in to take care of your plants';
-    $('#submitBtn').textContent = up ? 'Create account' : 'Sign in';
-    $('#switchText').textContent = up ? 'Already have an account?' : 'New here?';
-    $('#switchBtn').textContent = up ? 'Sign in' : 'Create account';
-    $('#err').textContent = '';
-  }
+    function showView() {
+        const user = Auth.user();
 
-  $('#switchBtn').onclick = () => setMode(mode === 'in' ? 'up' : 'in');
-  $('#signOutBtn').onclick = Auth.signOut;
+        $('#formView').hidden = !!user;
+        $('#profileView').hidden = !user;
 
-  $('#authForm').onsubmit = async e => {
-    e.preventDefault();
-    const name = $('#name').value.trim();
-    const email = $('#email').value.trim().toLowerCase();
-    const pass = $('#password').value;
-    const err = msg => { $('#err').textContent = msg; };
-
-    // Validation
-    if (mode === 'up' && name.length < 2) return err('Please enter your name.');
-    if (!/^\S+@\S+\.\S+$/.test(email)) return err('Enter a valid email address.');
-    if (pass.length < 6) return err('Password must be at least 6 characters.');
-
-    const users = Store.get('users', []);
-    const hash = await Auth.hash(pass);
-
-    if (mode === 'up') {
-      if (users.some(u => u.email === email)) return err('An account with this email already exists.');
-      users.push({ name, email, hash });
-      Store.set('users', users);
-      Store.set('session', { name, email });
-      toast('Account created ✓');
-    } else {
-      const u = users.find(u => u.email === email && u.hash === hash);
-      if (!u) return err('Wrong email or password.');
-      Store.set('session', { name: u.name, email: u.email });
-      toast('Welcome back, ' + u.name + ' 🌿');
+        if (user) {
+            $('#who').textContent = user.name;
+            $('#whoEmail').textContent = user.email;
+        }
     }
-    setTimeout(() => location.href = 'index.html', 700);
-  };
 
-  showView();
+    function setMode(newMode) {
+        mode = newMode;
+
+        const isRegistering = mode === 'up';
+
+        $('#nameWrap').hidden = !isRegistering;
+
+        $('#title').textContent = isRegistering
+            ? 'Create account'
+            : 'Login';
+
+        $('#submitBtn').textContent = isRegistering
+            ? 'Create account'
+            : 'Login';
+
+        $('#switchText').textContent = isRegistering
+            ? 'Already have an account?'
+            : 'New here?';
+
+        $('#switchBtn').textContent = isRegistering
+            ? 'Sign in'
+            : 'Create account';
+
+        $('#password').autocomplete = isRegistering
+            ? 'new-password'
+            : 'current-password';
+
+        $('#err').textContent = '';
+        $('#password').value = '';
+    }
+
+    $('#switchBtn').onclick = () => {
+        setMode(mode === 'in' ? 'up' : 'in');
+    };
+
+    $('#signOutBtn').onclick = Auth.signOut;
+
+    $('#authForm').onsubmit = async event => {
+        event.preventDefault();
+
+        const name = $('#name').value.trim();
+        const email = $('#email').value.trim().toLowerCase();
+        const password = $('#password').value;
+
+        const showError = message => {
+            $('#err').textContent = message;
+        };
+
+        // Validate form
+        if (mode === 'up' && name.length < 2) {
+            return showError('Please enter your name.');
+        }
+
+        if (!/^\S+@\S+\.\S+$/.test(email)) {
+            return showError('Enter a valid email address.');
+        }
+
+        if (password.length < 6) {
+            return showError('Password must be at least 6 characters.');
+        }
+
+        try {
+            const users = Store.get('users', []);
+            const hash = await Auth.hash(password);
+
+            if (mode === 'up') {
+                // Create account
+                if (users.some(user => user.email === email)) {
+                    return showError(
+                        'An account with this email already exists.'
+                    );
+                }
+
+                users.push({
+                    name,
+                    email,
+                    hash
+                });
+
+                Store.set('users', users);
+                Store.set('session', { name, email });
+
+                toast('Account created ✓');
+            } else {
+                // Sign in
+                const user = users.find(
+                    user => user.email === email && user.hash === hash
+                );
+
+                if (!user) {
+                    return showError('Wrong email or password.');
+                }
+
+                Store.set('session', {
+                    name: user.name,
+                    email: user.email
+                });
+
+                toast('Welcome back, ' + user.name + ' 🌿');
+            }
+
+            setTimeout(() => {
+                location.href = 'index.html';
+            }, 700);
+
+        } catch (error) {
+            console.error('Authentication error:', error);
+            showError(
+                'Something went wrong. Please try again using localhost.'
+            );
+        }
+    };
+
+    setMode('in');
+    showView();
 }
