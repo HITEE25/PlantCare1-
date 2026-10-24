@@ -21,6 +21,7 @@ function goBack() {
 
 
 (function () {
+    if (document.body.dataset.page === 'signin') return;
     const pages = [
         ['index.html', 'Home', 'images/home.png'],
         ['identify.html', 'Identify', 'images/search.png'],
