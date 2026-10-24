@@ -919,6 +919,41 @@ body[data-page="signin"] .switch {
 }
 
 
+/* Home hero plant image */
+.hero .art {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 1 40%;
+    min-width: 0;
+}
+
+.hero-plant-image {
+    display: block;
+    width: 100%;
+    max-width: 240px;
+    height: auto;
+    max-height: 280px;
+    object-fit: contain;
+    border-radius: 16px;
+}
+
+@media (max-width: 600px) {
+    .hero {
+        gap: 16px;
+    }
+
+    .hero .art {
+        flex-basis: 35%;
+    }
+
+    .hero-plant-image {
+        max-width: 140px;
+        max-height: 190px;
+    }
+}
+
+
 
 
 
