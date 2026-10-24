@@ -618,7 +618,6 @@ select {
     object-fit: contain;
 }
 
-/* Selected filter */
 .chip.on,
 .chip:hover {
     border-color: var(--mid);
@@ -634,13 +633,29 @@ select {
         padding: 16px 8px;
     }
 }
+
+.app-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: var(--bg);
+}
+
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 24px; 
+    justify-content: flex-end;
+    gap: 16px;
+    margin-left: auto;
 }
-.app-header .header-actions > .icon-btn:first-child {
-    margin-left: 18px;
+
+.app-header img {
+    width: 26px !important;
+    height: 26px !important;
+    object-fit: contain;
 }
+
 
 
