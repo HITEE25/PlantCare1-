@@ -19,6 +19,7 @@ function goBack() {
 
 
 
+
 (function () {
     const pages = [
         ['index.html', 'Home', 'images/home.png'],
@@ -38,37 +39,47 @@ function goBack() {
 
     const cur = location.pathname.split('/').pop() || 'index.html';
 
+    // Header: back button left, remaining icons right
     document.body.insertAdjacentHTML(
         'afterbegin',
         `
         <header class="app-header">
+            <button
+                class="header-btn back-btn"
+                onclick="goBack()"
+                aria-label="Go back"
+                type="button">
+                <img src="${headerIcons.back}" alt="">
+            </button>
 
             <div class="header-actions">
-                 <button class="header-btn back-btn"
-                    onclick="goBack()"
-                    aria-label="Go back"
-                type="button">
-                <button class="icon-btn"
-                        aria-label="Search"
-                        onclick="document.getElementById('q')?.focus()">
+                <button
+                    class="icon-btn"
+                    aria-label="Search"
+                    type="button"
+                    onclick="document.getElementById('q')?.focus()">
                     <img src="${headerIcons.search}" alt="">
                 </button>
 
-                <button class="icon-btn"
-                        aria-label="Filter"
-                        onclick="document.querySelector('.chips')?.scrollIntoView({behavior:'smooth'})">
+                <button
+                    class="icon-btn"
+                    aria-label="Filter"
+                    type="button"
+                    onclick="document.querySelector('.chips')?.scrollIntoView({behavior:'smooth'})">
                     <img src="${headerIcons.filter}" alt="">
                 </button>
 
-                <a class="round-icon-btn"
-                   href="my-plants.html"
-                   aria-label="Favourites">
+                <a
+                    class="round-icon-btn"
+                    href="my-plants.html"
+                    aria-label="Favourites">
                     <img src="${headerIcons.favourites}" alt="">
                 </a>
 
-                <a class="round-icon-btn"
-                   href="my-plants.html"
-                   aria-label="Cart">
+                <a
+                    class="round-icon-btn"
+                    href="my-plants.html"
+                    aria-label="Cart">
                     <img src="${headerIcons.cart}" alt="">
                 </a>
             </div>
@@ -76,29 +87,27 @@ function goBack() {
         `
     );
 
+    // Bottom navigation and footer
     document.body.insertAdjacentHTML(
         'beforeend',
         `
         <nav class="bottom-nav" aria-label="Main navigation">
             ${pages.map(p => `
-                <a href="${p[0]}"
-                   class="${p[0] === cur ||
-                   (cur === 'plant-info.html' && p[0] === 'index.html')
-                       ? 'active'
-                       : ''}">
+                <a
+                    href="${p[0]}"
+                    class="${p[0] === cur ||
+                    (cur === 'plant-info.html' && p[0] === 'index.html')
+                        ? 'active'
+                        : ''}">
                     <img src="${p[2]}" alt="" class="nav-icon">
                     <span>${p[1]}</span>
                 </a>
             `).join('')}
         </nav>
-
-        <footer class="site-footer">
-            PlantCare &copy; ${new Date().getFullYear()}
-            · Data stored only in your browser
-        </footer>
         `
     );
 })();
+
 
 function savePlant(id,nickname,room){
   const p=plantById(id);const list=Store.get('plants',[]);
