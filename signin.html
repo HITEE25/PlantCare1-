@@ -1,47 +1,115 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Sign in · PlantCare</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login · PlantCare+</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body data-page="signin">
-<main>
-  
-  <section id="formView">
-    <div class="art-circle" aria-hidden="true">🪴</div>
-    <h1 id="title">Welcome back</h1>
-    <p class="sub" id="sub">Sign in to take care of your plants</p>
+    <main class="signin-main">
+        <section id="formView" class="signin-card">
 
-    <form id="authForm" novalidate>
-      <div id="nameWrap" hidden>
-        <label for="name">Full name</label>
-        <input id="name" type="text" autocomplete="name" placeholder="Your name">
-      </div>
-      <label for="email">Email</label>
-      <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
-      <label for="password">Password</label>
-      <input id="password" type="password" autocomplete="current-password" placeholder="At least 6 characters">
-      <div class="err" id="err" role="alert"></div>
-      <button class="btn wide" id="submitBtn">Sign in</button>
-    </form>
+            <div class="brand">
+                <img
+                    src="images/plantcare-logo.png"
+                    alt="PlantCare+ — Smart Indoor Plant Assistance"
+                    class="brand-logo"
+                >
+            </div>
 
-    <p class="switch"><span id="switchText">New here?</span>
-      <button class="link" id="switchBtn" type="button">Create account</button></p>
-  </section>
+            <h1 id="title">Login</h1>
 
-  <section id="profileView" hidden>
-    <div class="art-circle" aria-hidden="true">👤</div>
-    <h1 id="who"></h1>
-    <p class="sub" id="whoEmail"></p>
-    <a class="btn wide" href="index.html">Go to Home</a>
-    <button class="btn soft wide" id="signOutBtn">Sign out</button>
-  </section>
-</main>
+            <div class="role-buttons">
+                <button class="role-btn active" type="button">
+                    User
+                </button>
 
-<script src="js/plants-data.js"></script>
-<script src="js/app.js"></script>
-<script src="js/auth.js"></script>
+                <button class="role-btn" type="button">
+                    Admin
+                </button>
+
+                <button class="role-btn" type="button">
+                    Botanist
+                </button>
+            </div>
+
+            <form id="authForm" novalidate>
+                <div id="nameWrap" hidden>
+                    <label for="name">Full Name</label>
+                    <input
+                        id="name"
+                        type="text"
+                        autocomplete="name"
+                        placeholder="Enter your name"
+                    >
+                </div>
+
+                <label for="email">Email or Username</label>
+                <input
+                    id="email"
+                    type="text"
+                    autocomplete="username"
+                    placeholder="Enter email or username"
+                >
+
+                <label for="password">Password</label>
+                <input
+                    id="password"
+                    type="password"
+                    autocomplete="current-password"
+                    placeholder="Enter your password"
+                >
+
+                <div class="forgot-password">
+                    <a href="#" onclick="return false;">Forget password?</a>
+                </div>
+
+                <div class="err" id="err" role="alert"></div>
+
+                <button
+                    class="btn wide login-btn"
+                    id="submitBtn"
+                    type="submit"
+                >
+                    Login
+                </button>
+            </form>
+
+            <div class="switch">
+                <span id="switchText">New here?</span>
+                <button
+                    class="link"
+                    id="switchBtn"
+                    type="button"
+                >
+                    Create account
+                </button>
+            </div>
+        </section>
+
+        <section id="profileView" class="signin-card" hidden>
+            <div class="profile-icon" aria-hidden="true">👤</div>
+
+            <h1 id="who"></h1>
+            <p class="sub" id="whoEmail"></p>
+
+            <a class="btn wide" href="index.html">Go to Home</a>
+
+            <button
+                class="btn soft wide"
+                id="signOutBtn"
+                type="button"
+            >
+                Sign out
+            </button>
+        </section>
+    </main>
+
+    <script src="js/plants-data.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
 </body>
 </html>
