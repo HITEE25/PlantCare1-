@@ -12,7 +12,7 @@ const RAW = [
         'Easy',
         false,
         'm',
-        '../1.jpeg',
+        '../snake.png',
         'Super hardy and air-purifying. Perfect for beginners and low light spaces.',
         'Let soil dry fully between waterings.',
         'Mushy base|Overwatering|Water less, repot in dry soil'
@@ -30,7 +30,7 @@ const RAW = [
         'Easy',
         false,
         's',
-        '../money.webp',
+        '../money.png',
         'A fast-growing trailing vine, loved in homes for good luck.',
         'Trim long vines to keep it bushy.',
         'Yellow leaves|Too much water|Let top soil dry before watering'
