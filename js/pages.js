@@ -339,7 +339,7 @@ if (page === "mine") {
                 <div class="empty">
                     No plants yet.
                     <a href="index.html"><u>Browse plants</u></a>
-                    to add some 🌱
+                    to add some 
                 </div>
             `;
     };
@@ -465,7 +465,7 @@ if (page === "care") {
 
         $("#over").innerHTML = overdueReminders.map(
             reminder => reminderRow(reminder, true)
-        ).join("") || '<div class="empty">Nothing due 🎉</div>';
+        ).join("") || '<div class="empty">Nothing due </div>';
 
         $("#up").innerHTML = upcomingReminders.map(
             reminder => reminderRow(reminder, false)
@@ -541,7 +541,7 @@ if (page === "care") {
             }
 
             reminder.due = newDate;
-            toast("Rescheduled ✓");
+            toast("Rescheduled");
         }
 
         Store.set("reminders", reminders);
@@ -590,7 +590,7 @@ if (page === "care") {
 
         if (permission === "granted") {
             new Notification("PlantCare", {
-                body: "Notifications enabled 🌿"
+                body: "Notifications enabled"
             });
         } else {
             toast("Permission not granted");
