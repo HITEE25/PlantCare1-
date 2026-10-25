@@ -410,201 +410,97 @@ if (page === "mine") {
 
 if (page === "care") {
     const plantName = reminder => {
-        const plant = Store.get("plants", []).find(
-            item => String(item.uid) === String(reminder.uid)
-        );
-
-        return plant ? plant.nickname : "Plant";
+        const plant = Store.get("plants", []).find(i => String(i.uid) === String(reminder.uid));
+        return plant ? esc(plant.nickname) : "Plant";           // esc() blocks HTML injection
     };
 
     const drawCompleted = () => {
         const completed = Store.get("completedReminders", []);
         const section = $("#completed");
-
         if (!section) return;
-
         section.innerHTML = completed.length
             ? [...completed].reverse().map(item => `
                 <div class="row white">
-                    <div>
-                        <b>${fmt(item.completedAt)}</b>
-                        · ${item.type} – ${plantName(item)}
-                        <br>
-                        <span class="over">Completed ✓</span>
-                    </div>
-                </div>
-            `).join("")
+                    <div><b>${fmt(item.completedAt)}</b> · ${item.type} – ${plantName(item)}<br>
+                    <span class="over">Completed ✓</span></div>
+                </div>`).join("")
             : '<div class="empty">No completed tasks yet.</div>';
     };
 
-    const reminderRow = (reminder, overdue) => `
-        <div class="row ${overdue ? "" : "white"}">
+    // Overdue = before today. Due today gets its own label.
+    const reminderRow = reminder => {
+        const late = reminder.due < today();
+        const isToday = reminder.due === today();
+        return `
+        <div class="row ${late || isToday ? "" : "white"}">
             <div>
-                <b>${fmt(reminder.due)}</b>
-                · ${reminder.type} – ${plantName(reminder)}
-                <br>
-                <small>
-                    ${reminder.every && Number(reminder.every) > 0
-                        ? `Every ${reminder.every} days`
-                        : "One time"}
-                </small>
-                ${overdue
-                    ? '<br><span class="over">Overdue</span>'
-                    : ""}
+                <b>${isToday ? "Today" : fmt(reminder.due)}</b> · ${reminder.type} – ${plantName(reminder)}<br>
+                <small>${Number(reminder.every) > 0 ? `Every ${reminder.every} days` : "One time"}</small>
+                ${late ? '<br><span class="over">Overdue</span>' : isToday ? '<br><span class="over" style="color:var(--dark)">Due today</span>' : ""}
             </div>
-
             <div class="pill-row">
-                <button
-                    class="btn yellow"
-                    data-done="${reminder.id}"
-                    type="button">
-                    Complete ✓
-                </button>
-
-                <button
-                    class="btn soft"
-                    data-snooze="${reminder.id}"
-                    type="button">
-                    Snooze 1d
-                </button>
-
-                <button
-                    class="btn soft"
-                    data-move="${reminder.id}"
-                    type="button">
-                    Reschedule
-                </button>
+                <button class="btn yellow" data-done="${reminder.id}" type="button">Complete ✓</button>
+                <button class="btn soft" data-snooze="${reminder.id}" type="button">Snooze 1d</button>
+                <button class="btn soft" data-move="${reminder.id}" type="button">Reschedule</button>
             </div>
-        </div>
-    `;
+        </div>`;
+    };
 
     const draw = () => {
-        const reminders = Store.get("reminders", []).sort(
-            (a, b) => a.due.localeCompare(b.due)
-        );
+        const reminders = Store.get("reminders", []).sort((a, b) => a.due.localeCompare(b.due));
+        const due = reminders.filter(r => r.due <= today());
+        const upcoming = reminders.filter(r => r.due > today());
 
-        const overdueReminders = reminders.filter(
-            reminder => reminder.due <= today()
-        );
+        $("#over").innerHTML = due.length
+            ? due.map(reminderRow).join("")
+            : '<div class="empty">Nothing due 🎉</div>';
+        $("#up").innerHTML = upcoming.length
+            ? upcoming.map(reminderRow).join("")
+            : '<div class="empty">No upcoming tasks. Add one below.</div>';
 
-        const upcomingReminders = reminders.filter(
-            reminder => reminder.due > today()
-        );
+        const saved = Store.get("plants", []);
+        $("#plant").innerHTML = saved.length
+            ? saved.map(p => `<option value="${p.uid}">${esc(p.nickname)}</option>`).join("")
+            : '<option value="">Save a plant first</option>';
 
-        const overdueSection = $("#over");
-        const upcomingSection = $("#up");
-        const plantSelect = $("#plant");
-
-        if (overdueSection) {
-            overdueSection.innerHTML = overdueReminders.length
-                ? overdueReminders.map(
-                    reminder => reminderRow(reminder, true)
-                ).join("")
-                : '<div class="empty">Nothing due.</div>';
-        }
-
-        if (upcomingSection) {
-            upcomingSection.innerHTML = upcomingReminders.length
-                ? upcomingReminders.map(
-                    reminder => reminderRow(reminder, false)
-                ).join("")
-                : '<div class="empty">No upcoming tasks. Add one below.</div>';
-        }
-
-        const savedPlants = Store.get("plants", []);
-
-        if (plantSelect) {
-            plantSelect.innerHTML = savedPlants.length
-                ? savedPlants.map(plant => `
-                    <option value="${plant.uid}">
-                        ${plant.nickname}
-                    </option>
-                `).join("")
-                : '<option value="">Save a plant first</option>';
-        }
-
-        // Always draw completed tasks from inside draw().
         drawCompleted();
     };
 
-    // Handle Complete, Snooze, and Reschedule.
+    // Complete, Snooze, Reschedule
     document.body.addEventListener("click", event => {
-        const button = event.target.closest(
-            "[data-done], [data-snooze], [data-move]"
-        );
-
+        const button = event.target.closest("[data-done], [data-snooze], [data-move]");
         if (!button) return;
 
         const data = button.dataset;
+        const id = data.done || data.snooze || data.move;
         let reminders = Store.get("reminders", []);
-
-        const reminderId =
-            data.done || data.snooze || data.move;
-
-        const reminder = reminders.find(
-            item => String(item.id) === String(reminderId)
-        );
-
+        const reminder = reminders.find(r => String(r.id) === String(id));
         if (!reminder) return;
 
         if (data.done) {
+            // Keep a history, capped at the latest 50 entries
             const completed = Store.get("completedReminders", []);
+            completed.push({ ...reminder, completedAt: today() });
+            Store.set("completedReminders", completed.slice(-50));
 
-            completed.push({
-                ...reminder,
-                completedAt: today()
-            });
-
-            Store.set("completedReminders", completed);
-
-            if (reminder.every && Number(reminder.every) > 0) {
-                // Recurring reminders move to their next due date.
+            if (Number(reminder.every) > 0) {
                 reminder.lastCompleted = today();
-                reminder.due = addDays(
-                    today(),
-                    Number(reminder.every)
-                );
+                reminder.due = addDays(today(), Number(reminder.every));   // recurring: next date
             } else {
-                // One-time reminders are removed from active reminders.
-                reminders = reminders.filter(
-                    item => String(item.id) !== String(reminder.id)
-                );
+                reminders = reminders.filter(r => String(r.id) !== String(reminder.id)); // one-time: remove
             }
-
             toast("Reminder completed ✓");
         } else if (data.snooze) {
-            const baseDate =
-                reminder.due > today() ? reminder.due : today();
-
-            reminder.due = addDays(baseDate, 1);
-
+            reminder.due = addDays(reminder.due > today() ? reminder.due : today(), 1);
             toast("Snoozed for 1 day");
         } else if (data.move) {
-            const newDate = prompt(
-                "New date (YYYY-MM-DD):",
-                reminder.due
-            );
-
+            const newDate = prompt("New date (YYYY-MM-DD):", reminder.due);
             if (!newDate) return;
-
-            const validFormat = /^\d{4}-\d{2}-\d{2}$/.test(newDate);
-
-            const parsedDate = new Date(`${newDate}T00:00:00`);
-
-            const validDate =
-                validFormat &&
-                !Number.isNaN(parsedDate.getTime()) &&
-                parsedDate.getFullYear() === Number(newDate.slice(0, 4)) &&
-                parsedDate.getMonth() === Number(newDate.slice(5, 7)) - 1 &&
-                parsedDate.getDate() === Number(newDate.slice(8, 10));
-
-            if (!validDate) {
-                toast("Invalid date. Use YYYY-MM-DD.");
-                return;
-            }
-
+            const parsed = new Date(`${newDate}T00:00:00`);
+            const valid = /^\d{4}-\d{2}-\d{2}$/.test(newDate) && !Number.isNaN(parsed.getTime()) &&
+                ymd(parsed) === newDate;                 // rejects things like 2026-02-31
+            if (!valid) { toast("Invalid date. Use YYYY-MM-DD."); return; }
             reminder.due = newDate;
-
             toast("Reminder rescheduled ✓");
         }
 
@@ -612,106 +508,36 @@ if (page === "care") {
         draw();
     });
 
-    // Set the default reminder date.
-    const dueInput = $("#due");
+    // Add a new reminder
+    $("#due").value = today();
+    $("#form").onsubmit = event => {
+        event.preventDefault();
+        const err = $("#err");
+        const plant = $("#plant").value, date = $("#due").value, every = $("#every").value;
 
-    if (dueInput) {
-        dueInput.value = today();
-    }
+        if (!plant) { err.textContent = "Save a plant first."; return; }
+        if (!date || every === "" || !Number.isFinite(Number(every)) || Number(every) < 0) {
+            err.textContent = "Enter a valid date and interval."; return;
+        }
+        err.textContent = "";
+        addReminder(plant, $("#type").value, date, every);
+        toast("Reminder set ✓");
+        draw();
+    };
 
-    // Add a new reminder.
-    const reminderForm = $("#form");
+    // Notifications (only after the user allows them)
+    $("#notif").onclick = async () => {
+        if (!("Notification" in window)) { toast("Notifications are not supported in this browser."); return; }
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") new Notification("PlantCare", { body: "Notifications enabled." });
+        else toast("Notification permission was not granted.");
+    };
 
-    if (reminderForm) {
-        reminderForm.onsubmit = event => {
-            event.preventDefault();
-
-            const plantSelect = $("#plant");
-            const typeSelect = $("#type");
-            const dateInput = $("#due");
-            const everyInput = $("#every");
-            const errorSection = $("#err");
-
-            if (!plantSelect || !plantSelect.value) {
-                if (errorSection) {
-                    errorSection.textContent = "Save a plant first.";
-                }
-                return;
-            }
-
-            if (
-                !dateInput ||
-                !dateInput.value ||
-                !everyInput ||
-                everyInput.value === "" ||
-                !Number.isFinite(Number(everyInput.value)) ||
-                Number(everyInput.value) < 0
-            ) {
-                if (errorSection) {
-                    errorSection.textContent =
-                        "Enter a valid date and interval.";
-                }
-                return;
-            }
-
-            if (errorSection) {
-                errorSection.textContent = "";
-            }
-
-            addReminder(
-                plantSelect.value,
-                typeSelect.value,
-                dateInput.value,
-                everyInput.value
-            );
-
-            toast("Reminder set ✓");
-            draw();
-        };
-    }
-
-    // Request notification permission.
-    const notificationButton = $("#notif");
-
-    if (notificationButton) {
-        notificationButton.onclick = async () => {
-            if (!("Notification" in window)) {
-                toast(
-                    "Notifications are not supported in this browser."
-                );
-                return;
-            }
-
-            const permission =
-                await Notification.requestPermission();
-
-            if (permission === "granted") {
-                new Notification("PlantCare", {
-                    body: "Notifications enabled."
-                });
-            } else {
-                toast("Notification permission was not granted.");
-            }
-        };
-    }
-
-    // Initial render.
     draw();
 
-    // Notify the user if plant tasks are due.
-    if (
-        "Notification" in window &&
-        Notification.permission === "granted"
-    ) {
-        const dueCount = Store.get("reminders", []).filter(
-            reminder => reminder.due <= today()
-        ).length;
-
-        if (dueCount > 0) {
-            new Notification("PlantCare", {
-                body: `${dueCount} plant task(s) due`
-            });
-        }
+    if ("Notification" in window && Notification.permission === "granted") {
+        const n = Store.get("reminders", []).filter(r => r.due <= today()).length;
+        if (n > 0) new Notification("PlantCare", { body: `${n} plant task(s) due` });
     }
 }
 
