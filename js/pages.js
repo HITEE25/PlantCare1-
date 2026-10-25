@@ -420,40 +420,53 @@ if (page === "care") {
             (a, b) => a.due.localeCompare(b.due)
         );
 
-        const reminderRow = (reminder, overdue) => `
-            <div class="row ${overdue ? "" : "white"}">
-                <div>
-                    <b>${fmt(reminder.due)}</b>
-                    · ${reminder.type} – ${plantName(reminder)}
+                            
+const reminderRow = (reminder, overdue) => `
+    <div class="row ${overdue ? "" : "white"}">
+        <div>
+            <b>${fmt(reminder.due)}</b>
+            · ${reminder.type} – ${plantName(reminder)}
 
-                    <br>
+            <br>
+            <small>
+                ${reminder.every
+                    ? `every ${reminder.every} days`
+                    : "one time"}
+            </small>
 
-                    <small>
-                        ${reminder.every
-                            ? `every ${reminder.every} days`
-                            : "one time"}
-                    </small>
+            ${overdue
+                ? '<br><span class="over">Overdue</span>'
+                : ""}
+        </div>
 
-                    ${overdue
-                        ? '<br><span class="over">Overdue</span>'
-                        : ""}
-                </div>
+        <div class="pill-row">
+            <button
+                class="btn yellow"
+                data-done="${reminder.id}"
+                type="button"
+            >
+                Complete ✓
+            </button>
 
-                <div class="pill-row">
-                    <button class="btn yellow" data-done="${reminder.id}">
-                        Complete
-                    </button>
+            <button
+                class="btn soft"
+                data-snooze="${reminder.id}"
+                type="button"
+            >
+                Snooze 1d
+            </button>
 
-                    <button class="btn soft" data-snooze="${reminder.id}">
-                        Snooze 1d
-                    </button>
+            <button
+                class="btn soft"
+                data-move="${reminder.id}"
+                type="button"
+            >
+                Reschedule
+            </button>
+        </div>
+    </div>
+`;
 
-                    <button class="btn soft" data-move="${reminder.id}">
-                        Reschedule
-                    </button>
-                </div>
-            </div>
-        `;
 
         const overdueReminders = reminders.filter(
             reminder => reminder.due <= today()
@@ -486,67 +499,82 @@ if (page === "care") {
             : '<option value="">Save a plant first</option>';
     };
 
-    document.body.addEventListener("click", event => {
-        const button = event.target.closest(
-            "[data-done], [data-snooze], [data-move]"
-        );
+    
+document.body.addEventListener("click", event => {
+    const button = event.target.closest(
+        "[data-done], [data-snooze], [data-move]"
+    );
 
-        if (!button) return;
+    if (!button) return;
 
-        const data = button.dataset;
-        let reminders = Store.get("reminders", []);
+    const data = button.dataset;
+    let reminders = Store.get("reminders", []);
 
-        const reminder = reminders.find(
-            item => item.id === (
-                data.done || data.snooze || data.move
-            )
-        );
+    const reminder = reminders.find(item =>
+        item.id === (
+            data.done || data.snooze || data.move
+        )
+    );
 
-        if (!reminder) return;
+    if (!reminder) return;
 
-        if (data.done) {
-            if (reminder.every) {
-                reminder.due = addDays(today(), reminder.every);
-            } else {
-                reminders = reminders.filter(
-                    item => item !== reminder
-                );
-            }
+    if (data.done) {
+        if (reminder.every) {
+            // Recurring reminder: complete this task
+            // and schedule its next occurrence.
+            reminder.lastCompleted = today();
+            reminder.due = addDays(today(), reminder.every);
 
+            toast("Completed ✓ Next reminder scheduled!");
+        } else {
+            // One-time reminder: remove it from active tasks.
+            reminders = reminders.filter(
+                item => item.id !== reminder.id
+            );
+
+            const completed = Store.get("completedReminders", []);
+            completed.push({
+                ...reminder,
+                completedAt: today()
+            });
+
+            Store.set("completedReminders", completed);
             toast("Reminder completed ✓");
         }
+    }
 
-        if (data.snooze) {
-            reminder.due = addDays(
-                reminder.due > today() ? reminder.due : today(),
-                1
-            );
+    if (data.snooze) {
+        reminder.due = addDays(
+            reminder.due > today() ? reminder.due : today(),
+            1
+        );
 
-            toast("Snoozed 1 day");
+        toast("Snoozed for 1 day");
+    }
+
+    if (data.move) {
+        const newDate = prompt(
+            "New date (YYYY-MM-DD):",
+            reminder.due
+        );
+
+        if (
+            !newDate ||
+            !/^\d{4}-\d{2}-\d{2}$/.test(newDate) ||
+            Number.isNaN(Date.parse(newDate))
+        ) {
+            toast("Invalid date");
+            return;
         }
 
-        if (data.move) {
-            const newDate = prompt(
-                "New date (YYYY-MM-DD):",
-                reminder.due
-            );
+        reminder.due = newDate;
+        toast("Reminder rescheduled ✓");
+    }
 
-            if (
-                !newDate ||
-                !/^\d{4}-\d{2}-\d{2}$/.test(newDate) ||
-                Number.isNaN(Date.parse(newDate))
-            ) {
-                toast("Invalid date");
-                return;
-            }
+    Store.set("reminders", reminders);
+    draw();
+});
 
-            reminder.due = newDate;
-            toast("Rescheduled");
-        }
-
-        Store.set("reminders", reminders);
-        draw();
-    });
 
     $("#due").value = today();
 
