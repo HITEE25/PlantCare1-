@@ -931,8 +931,9 @@ if (page === "mine") {
     draw();
 }
 
+
 if (page === "care") {
-    const plantName = reminder => {
+    const name = reminder => {
         const plant = Store.get("plants", []).find(
             item => item.uid === reminder.uid
         );
@@ -945,53 +946,68 @@ if (page === "care") {
             (a, b) => a.due.localeCompare(b.due)
         );
 
-                            
-const reminderRow = (reminder, overdue) => `
-    <div class="row ${overdue ? "" : "white"}">
-        <div>
-            <b>${fmt(reminder.due)}</b>
-            · ${reminder.type} – ${plantName(reminder)}
+        const row = (reminder, overdue) => `
+            <div class="dated">
+                <b>
+                    ${
+                        reminder.due === today()
+                            ? "Today"
+                            : fmt(reminder.due)
+                    }
+                </b>
 
-            <br>
-            <small>
-                ${reminder.every
-                    ? `every ${reminder.every} days`
-                    : "one time"}
-            </small>
+                <div class="row ${overdue ? "" : "white"}">
+                    <div>
+                        <b>${reminder.type}</b>
+                        · ${name(reminder)}
+                        <br>
 
-            ${overdue
-                ? '<br><span class="over">Overdue</span>'
-                : ""}
-        </div>
+                        <small>
+                            ${
+                                reminder.every
+                                    ? `every ${reminder.every} days`
+                                    : "one time"
+                            }
+                        </small>
 
-        <div class="pill-row">
-            <button
-                class="btn yellow"
-                data-done="${reminder.id}"
-                type="button"
-            >
-                Complete ✓
-            </button>
+                        ${
+                            overdue && reminder.due < today()
+                                ? '<br><span class="over">Overdue</span>'
+                                : ""
+                        }
+                    </div>
 
-            <button
-                class="btn soft"
-                data-snooze="${reminder.id}"
-                type="button"
-            >
-                Snooze 1d
-            </button>
+                    <div class="pill-row">
+                        ${
+                            overdue
+                                ? `
+                                    <button
+                                        class="btn yellow"
+                                        data-done="${reminder.id}"
+                                        type="button">
+                                        Complete
+                                    </button>
+                                `
+                                : ""
+                        }
 
-            <button
-                class="btn soft"
-                data-move="${reminder.id}"
-                type="button"
-            >
-                Reschedule
-            </button>
-        </div>
-    </div>
-`;
+                        <button
+                            class="btn soft"
+                            data-snooze="${reminder.id}"
+                            type="button">
+                            Snooze
+                        </button>
 
+                        <button
+                            class="btn soft"
+                            data-move="${reminder.id}"
+                            type="button">
+                            Edit date
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
 
         const overdueReminders = reminders.filter(
             reminder => reminder.due <= today()
@@ -1001,22 +1017,22 @@ const reminderRow = (reminder, overdue) => `
             reminder => reminder.due > today()
         );
 
-        $("#over").innerHTML = overdueReminders.map(
-            reminder => reminderRow(reminder, true)
-        ).join("") || '<div class="empty">Nothing due </div>';
+        $("#over").innerHTML = overdueReminders.length
+            ? overdueReminders
+                .map(reminder => row(reminder, true))
+                .join("")
+            : '<div class="empty">Nothing due 🎉</div>';
 
-        $("#up").innerHTML = upcomingReminders.map(
-            reminder => reminderRow(reminder, false)
-        ).join("") || `
-            <div class="empty">
-                No upcoming tasks. Add one below.
-            </div>
-        `;
+        $("#up").innerHTML = upcomingReminders.length
+            ? upcomingReminders
+                .map(reminder => row(reminder, false))
+                .join("")
+            : '<div class="empty">No upcoming tasks. Add one below.</div>';
 
-        const savedPlants = Store.get("plants", []);
+        const plants = Store.get("plants", []);
 
-        $("#plant").innerHTML = savedPlants.length
-            ? savedPlants.map(plant => `
+        $("#plant").innerHTML = plants.length
+            ? plants.map(plant => `
                 <option value="${plant.uid}">
                     ${plant.nickname}
                 </option>
@@ -1024,105 +1040,92 @@ const reminderRow = (reminder, overdue) => `
             : '<option value="">Save a plant first</option>';
     };
 
-    
-document.body.addEventListener("click", event => {
-    const button = event.target.closest(
-        "[data-done], [data-snooze], [data-move]"
-    );
-
-    if (!button) return;
-
-    const data = button.dataset;
-    let reminders = Store.get("reminders", []);
-
-    const reminder = reminders.find(item =>
-        item.id === (
-            data.done || data.snooze || data.move
-        )
-    );
-
-    if (!reminder) return;
-
-    
-if (data.done) {
-    // Save this occurrence as completed.
-    const completed = Store.get("completedReminders", []);
-
-    completed.push({
-        ...reminder,
-        completedAt: today()
-    });
-
-    Store.set("completedReminders", completed);
-
-    if (reminder.every) {
-        // Keep the recurring reminder active for next time.
-        reminder.due = addDays(today(), reminder.every);
-        reminder.lastCompleted = today();
-    } else {
-        // Remove one-time reminders from active tasks.
-        reminders = reminders.filter(
-            item => item.id !== reminder.id
-        );
-    }
-
-    toast("Reminder completed ✓");
-}
-
-
-    if (data.snooze) {
-        reminder.due = addDays(
-            reminder.due > today() ? reminder.due : today(),
-            1
+    document.body.addEventListener("click", event => {
+        const button = event.target.closest(
+            "[data-done], [data-snooze], [data-move]"
         );
 
-        toast("Snoozed for 1 day");
-    }
+        if (!button) return;
 
-    if (data.move) {
-        const newDate = prompt(
-            "New date (YYYY-MM-DD):",
-            reminder.due
+        const data = button.dataset;
+        let reminders = Store.get("reminders", []);
+
+        const reminderId =
+            data.done || data.snooze || data.move;
+
+        const reminder = reminders.find(
+            item => String(item.id) === String(reminderId)
         );
 
-        if (
-            !newDate ||
-            !/^\d{4}-\d{2}-\d{2}$/.test(newDate) ||
-            Number.isNaN(Date.parse(newDate))
-        ) {
-            toast("Invalid date");
-            return;
+        if (!reminder) return;
+
+        if (data.done) {
+            if (reminder.every && Number(reminder.every) > 0) {
+                reminder.due = addDays(
+                    today(),
+                    Number(reminder.every)
+                );
+
+                toast("Done! Next date recalculated ✓");
+            } else {
+                reminders = reminders.filter(
+                    item => item !== reminder
+                );
+
+                toast("Reminder completed ✓");
+            }
         }
 
-        reminder.due = newDate;
-        toast("Reminder rescheduled ✓");
-    }
+        if (data.snooze) {
+            const baseDate =
+                reminder.due > today()
+                    ? reminder.due
+                    : today();
 
-    Store.set("reminders", reminders);
-    draw(
-        
-const completed = Store.get("completedReminders", []);
+            reminder.due = addDays(baseDate, 1);
 
-const completedSection = document.querySelector("#completed");
+            toast("Snoozed 1 day");
+        }
 
-if (completedSection) {
-    completedSection.innerHTML = completed.length
-        ? completed.slice().reverse().map(item => `
-            <div class="row white">
-                <div>
-                    <b>${fmt(item.completedAt)}</b>
-                    · ${item.type} – ${plantName(item)}
-                    <br>
-                    <span class="over">Completed ✓</span>
-                </div>
-            </div>
-        `).join("")
-        : '<div class="empty">No completed tasks yet.</div>';
-}
+        if (data.move) {
+            const newDate = prompt(
+                "New date (YYYY-MM-DD):",
+                reminder.due
+            );
 
-    );
-});
+            if (!newDate) return;
 
+            const validFormat = /^\d{4}-\d{2}-\d{2}$/.test(
+                newDate
+            );
+
+            const parsedDate = new Date(
+                `${newDate}T00:00:00`
+            );
+
+            const validDate =
+                validFormat &&
+                !Number.isNaN(parsedDate.getTime()) &&
+                parsedDate.getFullYear() ===
+                    Number(newDate.slice(0, 4)) &&
+                parsedDate.getMonth() ===
+                    Number(newDate.slice(5, 7)) - 1 &&
+                parsedDate.getDate() ===
+                    Number(newDate.slice(8, 10));
+
+            if (!validDate) {
+                toast("Invalid date. Use YYYY-MM-DD.");
+                return;
+            }
+
+            reminder.due = newDate;
+
+            toast("Rescheduled ✓");
+        }
+
+        Store.set("reminders", reminders);
+        draw();
+    });
 
     $("#due").value = today();
 
@@ -1137,9 +1140,11 @@ if (completedSection) {
         if (
             !$("#due").value ||
             $("#every").value === "" ||
+            !Number.isFinite(Number($("#every").value)) ||
             Number($("#every").value) < 0
         ) {
-            $("#err").textContent = "Enter a valid date and interval.";
+            $("#err").textContent =
+                "Enter a valid date and interval.";
             return;
         }
 
@@ -1162,11 +1167,12 @@ if (completedSection) {
             return;
         }
 
-        const permission = await Notification.requestPermission();
+        const permission =
+            await Notification.requestPermission();
 
         if (permission === "granted") {
             new Notification("PlantCare", {
-                body: "Notifications enabled"
+                body: "Notifications enabled 🌿"
             });
         } else {
             toast("Permission not granted");
@@ -1190,6 +1196,7 @@ if (completedSection) {
         }
     }
 }
+
 
 
 if (page === "rec") {
