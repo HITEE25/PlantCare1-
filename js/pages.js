@@ -2,7 +2,6 @@
 const page = document.body.dataset.page;
 const $ = selector => document.querySelector(selector);
 
-// Display a photo when p.image is defined; otherwise show the plant emoji.
 function plantVisual(plant, className = "plant-photo") {
     if (plant.image) {
         return `
@@ -20,7 +19,6 @@ function plantVisual(plant, className = "plant-photo") {
 }
 
 
-// ---------- HOME: search, filters, summary ----------
 if (page === "home") {
     let filter = "all";
 
@@ -85,7 +83,6 @@ if (page === "home") {
 }
 
 
-// ---------- IDENTIFY: upload + demo result ----------
 if (page === "identify") {
     let chosen = null;
 
@@ -129,7 +126,6 @@ if (page === "identify") {
         });
     });
 
-    // Demo only. Replace this function with a real plant recognition API later.
     const identifyPlant = async file => ({
         plantId: PLANTS[
             (file.size + file.name.length) % PLANTS.length
@@ -178,7 +174,6 @@ if (page === "identify") {
 }
 
 
-// ---------- PLANT INFO ----------
 if (page === "info") {
     const plant = plantById(
         new URLSearchParams(location.search).get("id")
@@ -255,8 +250,6 @@ if (page === "info") {
     }
 }
 
-
-// ---------- MY PLANTS: edit, delete and filter ----------
 if (page === "mine") {
     const draw = () => {
         const allPlants = Store.get("plants", []);
@@ -413,8 +406,6 @@ if (page === "mine") {
     draw();
 }
 
-
-// ---------- CARE REMINDERS ----------
 if (page === "care") {
     const plantName = reminder => {
         const plant = Store.get("plants", []).find(
@@ -625,7 +616,6 @@ if (page === "care") {
 }
 
 
-// ---------- RECOMMENDATIONS: weighted scoring ----------
 if (page === "rec") {
     const lightScores = {
         low: 0,
