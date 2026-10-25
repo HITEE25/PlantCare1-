@@ -406,6 +406,7 @@ if (page === "mine") {
     draw();
 }
 
+
 if (page === "care") {
     const plantName = reminder => {
         const plant = Store.get("plants", []).find(
@@ -415,58 +416,65 @@ if (page === "care") {
         return plant ? plant.nickname : "Plant";
     };
 
+    const drawCompleted = () => {
+        const completed = Store.get("completedReminders", []);
+        const section = $("#completed");
+
+        if (!section) return;
+
+        section.innerHTML = completed.length
+            ? [...completed].reverse().map(item => `
+                <div class="row white">
+                    <div>
+                        <b>${fmt(item.completedAt)}</b>
+                        · ${item.type} – ${plantName(item)}
+                        <br>
+                        <span class="over">Completed ✓</span>
+                    </div>
+                </div>
+            `).join("")
+            : '<div class="empty">No completed tasks yet.</div>';
+    };
+
+    const reminderRow = (reminder, overdue) => `
+        <div class="row ${overdue ? "" : "white"}">
+            <div>
+                <b>${fmt(reminder.due)}</b>
+                · ${reminder.type} – ${plantName(reminder)}
+                <br>
+                <small>
+                    ${reminder.every
+                        ? `every ${reminder.every} days`
+                        : "one time"}
+                </small>
+                ${overdue
+                    ? '<br><span class="over">Overdue</span>'
+                    : ""}
+            </div>
+
+            <div class="pill-row">
+                <button class="btn yellow"
+                    data-done="${reminder.id}" type="button">
+                    Complete ✓
+                </button>
+
+                <button class="btn soft"
+                    data-snooze="${reminder.id}" type="button">
+                    Snooze 1d
+                </button>
+
+                <button class="btn soft"
+                    data-move="${reminder.id}" type="button">
+                    Reschedule
+                </button>
+            </div>
+        </div>
+    `;
+
     const draw = () => {
         const reminders = Store.get("reminders", []).sort(
             (a, b) => a.due.localeCompare(b.due)
         );
-
-                            
-const reminderRow = (reminder, overdue) => `
-    <div class="row ${overdue ? "" : "white"}">
-        <div>
-            <b>${fmt(reminder.due)}</b>
-            · ${reminder.type} – ${plantName(reminder)}
-
-            <br>
-            <small>
-                ${reminder.every
-                    ? `every ${reminder.every} days`
-                    : "one time"}
-            </small>
-
-            ${overdue
-                ? '<br><span class="over">Overdue</span>'
-                : ""}
-        </div>
-
-        <div class="pill-row">
-            <button
-                class="btn yellow"
-                data-done="${reminder.id}"
-                type="button"
-            >
-                Complete ✓
-            </button>
-
-            <button
-                class="btn soft"
-                data-snooze="${reminder.id}"
-                type="button"
-            >
-                Snooze 1d
-            </button>
-
-            <button
-                class="btn soft"
-                data-move="${reminder.id}"
-                type="button"
-            >
-                Reschedule
-            </button>
-        </div>
-    </div>
-`;
-
 
         const overdueReminders = reminders.filter(
             reminder => reminder.due <= today()
@@ -476,17 +484,17 @@ const reminderRow = (reminder, overdue) => `
             reminder => reminder.due > today()
         );
 
-        $("#over").innerHTML = overdueReminders.map(
-            reminder => reminderRow(reminder, true)
-        ).join("") || '<div class="empty">Nothing due </div>';
+        $("#over").innerHTML = overdueReminders.length
+            ? overdueReminders.map(
+                reminder => reminderRow(reminder, true)
+            ).join("")
+            : '<div class="empty">Nothing due.</div>';
 
-        $("#up").innerHTML = upcomingReminders.map(
-            reminder => reminderRow(reminder, false)
-        ).join("") || `
-            <div class="empty">
-                No upcoming tasks. Add one below.
-            </div>
-        `;
+        $("#up").innerHTML = upcomingReminders.length
+            ? upcomingReminders.map(
+                reminder => reminderRow(reminder, false)
+            ).join("")
+            : '<div class="empty">No upcoming tasks. Add one below.</div>';
 
         const savedPlants = Store.get("plants", []);
 
@@ -497,103 +505,155 @@ const reminderRow = (reminder, overdue) => `
                 </option>
             `).join("")
             : '<option value="">Save a plant first</option>';
+
+        drawCompleted();
     };
 
-    
-document.body.addEventListener("click", event => {
-    const button = event.target.closest(
-        "[data-done], [data-snooze], [data-move]"
-    );
+    document.body.addEventListener("click", event => {
+        const button = event.target.closest(
+            "[data-done], [data-snooze], [data-move]"
+        );
 
-    if (!button) return;
+        if (!button) return;
 
-    const data = button.dataset;
-    let reminders = Store.get("reminders", []);
+        const data = button.dataset;
+        let reminders = Store.get("reminders", []);
 
-    const reminder = reminders.find(item =>
-        item.id === (
-            data.done || data.snooze || data.move
-        )
-    );
+        const reminderId = data.done || data.snooze || data.move;
 
-    if (!reminder) return;
+        const reminder = reminders.find(
+            item => String(item.id) === String(reminderId)
+        );
 
-    
-if (data.done) {
-    // Save this occurrence as completed.
-    const completed = Store.get("completedReminders", []);
+        if (!reminder) return;
 
-    completed.push({
-        ...reminder,
-        completedAt: today()
+        if (data.done) {
+            const completed = Store.get("completedReminders", []);
+
+            completed.push({
+                ...reminder,
+                completedAt: today()
+            });
+
+            Store.set("completedReminders", completed);
+
+            if (reminder.every && Number(reminder.every) > 0) {
+                reminder.lastCompleted = today();
+                reminder.due = addDays(
+                    today(),
+                    Number(reminder.every)
+                );
+            } else {
+                reminders = reminders.filter(
+                    item => item.id !== reminder.id
+                );
+            }
+
+            toast("Reminder completed ✓");
+        }
+
+        if (data.snooze) {
+            reminder.due = addDays(
+                reminder.due > today() ? reminder.due : today(),
+                1
+            );
+
+            toast("Snoozed for 1 day");
+        }
+
+        if (data.move) {
+            const newDate = prompt(
+                "New date (YYYY-MM-DD):",
+                reminder.due
+            );
+
+            if (!newDate) return;
+
+            if (
+                !/^\d{4}-\d{2}-\d{2}$/.test(newDate) ||
+                Number.isNaN(Date.parse(newDate)) ||
+                new Date(newDate).toISOString().slice(0, 10) !== newDate
+            ) {
+                toast("Invalid date. Use YYYY-MM-DD.");
+                return;
+            }
+
+            reminder.due = newDate;
+            toast("Reminder rescheduled ✓");
+        }
+
+        Store.set("reminders", reminders);
+        draw();
     });
 
-    Store.set("completedReminders", completed);
+    $("#due").value = today();
 
-    if (reminder.every) {
-        // Keep the recurring reminder active for next time.
-        reminder.due = addDays(today(), reminder.every);
-        reminder.lastCompleted = today();
-    } else {
-        // Remove one-time reminders from active tasks.
-        reminders = reminders.filter(
-            item => item.id !== reminder.id
-        );
-    }
+    $("#form").onsubmit = event => {
+        event.preventDefault();
 
-    toast("Reminder completed ✓");
-}
-
-
-    if (data.snooze) {
-        reminder.due = addDays(
-            reminder.due > today() ? reminder.due : today(),
-            1
-        );
-
-        toast("Snoozed for 1 day");
-    }
-
-    if (data.move) {
-        const newDate = prompt(
-            "New date (YYYY-MM-DD):",
-            reminder.due
-        );
-
-        if (
-            !newDate ||
-            !/^\d{4}-\d{2}-\d{2}$/.test(newDate) ||
-            Number.isNaN(Date.parse(newDate))
-        ) {
-            toast("Invalid date");
+        if (!$("#plant").value) {
+            $("#err").textContent = "Save a plant first.";
             return;
         }
 
-        reminder.due = newDate;
-        toast("Reminder rescheduled ✓");
-    }
+        if (
+            !$("#due").value ||
+            $("#every").value === "" ||
+            Number($("#every").value) < 0
+        ) {
+            $("#err").textContent =
+                "Enter a valid date and interval.";
+            return;
+        }
 
-    Store.set("reminders", reminders);
+        $("#err").textContent = "";
+
+        addReminder(
+            $("#plant").value,
+            $("#type").value,
+            $("#due").value,
+            $("#every").value
+        );
+
+        toast("Reminder set ✓");
+        draw();
+    };
+
+    $("#notif").onclick = async () => {
+        if (!("Notification" in window)) {
+            toast("Notifications are not supported in this browser.");
+            return;
+        }
+
+        const permission = await Notification.requestPermission();
+
+        if (permission === "granted") {
+            new Notification("PlantCare", {
+                body: "Notifications enabled."
+            });
+        } else {
+            toast("Notification permission was not granted.");
+        }
+    };
+
     draw();
-    
-const page = document.body.dataset.page;
-const $ = selector => document.querySelector(selector);
 
-function plantVisual(plant, className = "plant-photo") {
-    if (plant.image) {
-        return `
-            <img
-                src="${plant.image}"
-                alt="${plant.commonName}"
-                class="${className}"
-                onerror="this.style.display='none';this.nextElementSibling.hidden=false"
-            >
-            <span class="plant-emoji" hidden>${plant.emoji}</span>
-        `;
+    if (
+        "Notification" in window &&
+        Notification.permission === "granted"
+    ) {
+        const dueCount = Store.get("reminders", []).filter(
+            reminder => reminder.due <= today()
+        ).length;
+
+        if (dueCount) {
+            new Notification("PlantCare", {
+                body: `${dueCount} plant task(s) due`
+            });
+        }
     }
-
-    return `<span class="plant-emoji">${plant.emoji}</span>`;
 }
+
 
 
 if (page === "home") {
