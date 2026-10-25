@@ -245,6 +245,7 @@ function addReminder(uid, type, due, every) {
 
 
 
+
 function plantCard(plant) {
     return `
         <article class="card">
@@ -263,7 +264,7 @@ function plantCard(plant) {
 
             <div
                 class="muted"
-                style="color: var(--muted); font-size: .85rem;"
+                style="color: var(--muted); font-size: 0.85rem;"
             >
                 ${plant.scientificName}
             </div>
@@ -283,7 +284,6 @@ function plantCard(plant) {
             </div>
 
             <div class="pill-row" style="margin-top: 10px;">
-
                 <a
                     class="btn soft"
                     href="plant-info.html?id=${plant.id}"
@@ -298,12 +298,12 @@ function plantCard(plant) {
                 >
                     Save
                 </button>
-
             </div>
 
         </article>
     `;
 }
+
 
 
 
