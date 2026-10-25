@@ -140,21 +140,23 @@ function goBack() {
                     <img src="${headerIcons.filter}" alt="">
                 </button>
 
-                <a
+                <button
                     class="round-icon-btn"
-                    href="my-plants.html"
+                    id="favouritesBtn"
                     aria-label="Favourites"
+                    type="button"
                 >
-                    <img src="${headerIcons.favourites}" alt="">
-                </a>
+                <img src="${headerIcons.favourites}" alt="">
+                </button>
 
-                <a
+                <button
                     class="round-icon-btn"
-                    href="my-plants.html"
+                    id="cartBtn"
                     aria-label="Cart"
-                >
+                    type="button"
+                    >
                     <img src="${headerIcons.cart}" alt="">
-                </a>
+                </button>
 
             </div>
         </header>
