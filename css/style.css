@@ -1074,7 +1074,49 @@ body[data-page="signin"] .switch {
         padding: 16px;
     }
 }
+/* Fix date input visibility on iPhone and Safari */
+input[type="date"] {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    padding: 12px;
+    box-sizing: border-box;
 
+    -webkit-appearance: none;
+    appearance: none;
+
+    background-color: #fff;
+    color: #26332a;
+    border: 1px solid #cbd7bf;
+    border-radius: 14px;
+
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: normal;
+}
+
+/* Keep the date text and calendar control inside the field */
+input[type="date"]::-webkit-date-and-time-value {
+    text-align: left;
+    min-height: 1.2em;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Improve spacing on smaller screens */
+@media (max-width: 480px) {
+    input[type="date"] {
+        min-height: 50px;
+        padding: 12px 10px;
+        font-size: 16px;
+    }
+}
 
 
 
