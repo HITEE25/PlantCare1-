@@ -227,7 +227,7 @@ function savePlant(id, nickname, room) {
         plant.wateringDays
     );
 
-    toast(`${plant.commonName} saved to My Plants ✓`);
+    toast(`${plant.commonName} saved to My Plants`);
 }
 
 
@@ -277,7 +277,7 @@ function plantCard(plant) {
                 </span>
 
                 <span class="tag">
-                    ${plant.petSafe ? "🐾 Pet safe" : "⚠ Toxic to pets"}
+                    ${plant.petSafe ? "🐾 Pet safe" : " Toxic to pets"}
                 </span>
 
                 <span class="tag">
