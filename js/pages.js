@@ -335,7 +335,7 @@ if (page === "mine") {
             plant.room = room.trim();
 
             Store.set("plants", allPlants);
-            toast("Plant updated ✓");
+            toast("Plant updated");
             draw();
         }
     };
@@ -484,7 +484,7 @@ if (page === "care") {
 
         err.textContent = "";
         addReminder(plant, $("#type").value, date, every);
-        toast("Reminder set ✓");
+        toast("Reminder set");
         draw();
     };
 
